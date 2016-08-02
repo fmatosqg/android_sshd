@@ -8,6 +8,7 @@ import org.apache.sshd.server.command.ScpCommandFactory;
 import org.apache.sshd.server.keyprovider.SimpleGeneratorHostKeyProvider;
 import org.apache.sshd.server.session.ServerSession;
 import org.apache.sshd.server.sftp.SftpSubsystem;
+import org.apache.sshd.server.shell.ProcessShellFactory;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -39,7 +40,9 @@ public class Server {
         sshd.setSubsystemFactories(Arrays
                 .<NamedFactory<Command>>asList(new SftpSubsystem.Factory()));
         sshd.setCommandFactory(new ScpCommandFactory());
+        sshd.setShellFactory(new ProcessShellFactory(new String[] { "/system/bin/sh", "-i", "-l" }));
         sshd.setPasswordAuthenticator(new PasswordAuthenticator() {
+
 
             @Override
             public boolean authenticate(String u, String p, ServerSession s) {
